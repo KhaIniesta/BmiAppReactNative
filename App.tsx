@@ -15,34 +15,31 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 function App(): React.JSX.Element {
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
-  const [result, setResult] = useState("0.00");
-  const [type, setType] = useState("")
+  const [result, setResult] = useState('0.00');
+  const [type, setType] = useState('');
 
   const handlePress = () => {
-    const myResult = onCalculate()
-    showMessage(myResult)
-  }
+    const myResult = onCalculate();
+    showMessage(myResult);
+  };
 
   const showMessage = (result: number) => {
     if (result > 32) {
-      setType("Obese")
+      setType('Obese');
+    } else if (result > 25) {
+      setType('OVer weight');
+    } else if (result > 18.5) {
+      setType('Normal weight');
+    } else {
+      setType('Under weight');
     }
-    else if (result > 25) {
-      setType("OVer weight")
-    }
-    else if (result > 18.5) {
-      setType("Normal weight")
-    }
-    else {
-      setType("Under weight")
-    }
-  }
+  };
 
   const onCalculate = () => {
     const weightVal = parseFloat(weight);
@@ -50,7 +47,7 @@ function App(): React.JSX.Element {
 
     const result = weightVal / Math.pow(heightVal / 100.0, 2);
     setResult(result.toString());
-    return result
+    return result;
   };
 
   return (

@@ -5,113 +5,141 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
   View,
+  Image,
+  Switch,
+  TextInput,
+  ImageBackground,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
+  const [result, setResult] = useState("0.00");
+  const [type, setType] = useState("")
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const handlePress = () => {
+    const myResult = onCalculate()
+    showMessage(myResult)
+  }
+
+  const showMessage = (result: number) => {
+    if (result > 32) {
+      setType("Obese")
+    }
+    else if (result > 25) {
+      setType("OVer weight")
+    }
+    else if (result > 18.5) {
+      setType("Normal weight")
+    }
+    else {
+      setType("Under weight")
+    }
+  }
+
+  const onCalculate = () => {
+    const weightVal = parseFloat(weight);
+    const heightVal = parseFloat(height);
+
+    const result = weightVal / Math.pow(heightVal / 100.0, 2);
+    setResult(result.toString());
+    return result
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'android' ? 'padding' : 'height'}
+      style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <View style={styles.group}>
+            <Text>Weight(Kg)</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="0"
+              inputMode="numeric"
+              returnKeyType="go"
+              onChangeText={text => {
+                setWeight(text);
+              }}
+              value={weight.toString()}
+            />
+          </View>
+
+          <View style={styles.group}>
+            <Text>Height(CM)</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="0"
+              inputMode="numeric"
+              returnKeyType="go"
+              onChangeText={text => {
+                setHeight(text);
+              }}
+              value={height.toString()}
+            />
+          </View>
+
+          <View style={styles.center}>
+            <Text style={styles.title}>BMI: {result}</Text>
+            <Text style={styles.title}>Type: {type}</Text>
+
+            <View style={styles.group}>
+              <TouchableOpacity style={styles.button} onPress={handlePress}>
+                <Text style={styles.buttonText}>Compute</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  input: {
+    padding: 10,
+    height: 40,
+    borderWidth: 1,
+    width: 300,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'column',
+    padding: 20,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  group: {
+    marginTop: 20,
   },
-  highlight: {
-    fontWeight: '700',
+  button: {
+    backgroundColor: 'lightblue',
+    padding: 20,
+    borderWidth: 1,
+  },
+  buttonText: {
+    fontSize: 30,
+    fontWeight: '500',
+  },
+  title: {
+    fontSize: 20,
+  },
+  center: {
+    alignItems: 'center',
   },
 });
 

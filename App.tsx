@@ -7,22 +7,15 @@
 
 import React, {useState} from 'react';
 import {
-  SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
-  Image,
-  Switch,
   TextInput,
-  ImageBackground,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   Keyboard,
-  TouchableWithoutFeedback,
-  Alert,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 function App(): React.JSX.Element {
